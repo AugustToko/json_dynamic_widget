@@ -22,7 +22,7 @@ class JsonWidgetRegistrarBuilder
     final emitter = DartEmitter(useNullSafetySyntax: true);
     final widgets = WidgetMetadata().data;
 
-    const registrationChecker = TypeChecker.fromRuntime(JsonWidgetRegistration);
+    const registrationChecker = TypeChecker.typeNamed(JsonWidgetRegistration);
 
     final manualRegistrations = <String, WidgetInfo>{};
     MethodElement? registerMethod;
@@ -32,7 +32,7 @@ class JsonWidgetRegistrarBuilder
         registerMethod = m;
       }
       if (annotation != null) {
-        manualRegistrations[m.name] = WidgetInfo(
+        manualRegistrations[m.name!] = WidgetInfo(
           autoRegister: true,
           builder: ConstantReader(annotation).read('builder').stringValue,
           constBuilder: false,

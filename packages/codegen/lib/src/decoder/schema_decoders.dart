@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:json_theme/codegen.dart';
 
-typedef ParameterSchemaDecoder = String Function(ParameterElement element);
+typedef ParameterSchemaDecoder = String Function(FormalParameterElement element);
 
 const _kNumberArraySchema = {
   'anyOf': [
@@ -18,7 +18,7 @@ const _kNumberArraySchema = {
 };
 
 final kSchemaDecoders = <String, ParameterSchemaDecoder>{
-  'bool': (ParameterElement element) => 'SchemaHelper.boolSchema',
+  'bool': (FormalParameterElement element) => 'SchemaHelper.boolSchema',
   'double': (element) => 'SchemaHelper.numberSchema',
   'int': (element) => 'SchemaHelper.numberSchema',
   'List<double>': (element) => json.encode(_kNumberArraySchema),

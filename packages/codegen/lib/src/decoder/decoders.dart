@@ -3,14 +3,14 @@ import 'package:json_dynamic_widget_codegen/src/extension/dart_type_extension.da
 import 'package:json_theme/codegen.dart';
 
 typedef ParameterDecoder = String Function(
-  ParameterElement element, {
+    FormalParameterElement element, {
   required String? defaultValueCode,
   required String name,
 });
 
 final kDecoders = <String, ParameterDecoder>{
   'bool': (
-    ParameterElement element, {
+      FormalParameterElement element, {
     required String? defaultValueCode,
     required String name,
   }) =>
@@ -207,12 +207,12 @@ final kDecoders = <String, ParameterDecoder>{
 
 String decode(
   ClassElement classElement,
-  ParameterElement element, {
+    FormalParameterElement element, {
   required Map<String, String> aliases,
   required Map<String, String> defaults,
   required Iterable<String> paramDecoders,
 }) {
-  final name = aliases[element.name] ?? element.name;
+  final name = aliases[element.name] ?? element.name!;
   var defaultValueCode = defaults[name] ??
       (paramDecoders.contains(name) ? null : element.defaultValueCode);
   if (defaultValueCode != null) {
@@ -250,7 +250,7 @@ String decode(
 }
 
 String _defaultDecoder(
-  ParameterElement element,
+    FormalParameterElement element,
   String name,
   String funName,
   String? defaultValueCode,
@@ -273,7 +273,7 @@ String _defaultDecoder(
 }
 
 String _themeDecoder(
-  ParameterElement element,
+  FormalParameterElement element,
   String name,
   String funName,
   String? defaultValueCode,
@@ -295,7 +295,7 @@ String _themeDecoder(
 }
 
 String _widgetDecoder(
-  ParameterElement element,
+  FormalParameterElement element,
   String name,
   String funName,
   String? defaultValueCode,

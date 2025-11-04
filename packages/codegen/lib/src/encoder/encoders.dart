@@ -3,13 +3,13 @@ import 'package:json_dynamic_widget_codegen/json_dynamic_widget_codegen.dart';
 import 'package:json_theme/codegen.dart';
 
 typedef ParameterEncoder = String Function(
-  ParameterElement element, {
+  FormalParameterElement element, {
   required String name,
 });
 
 final kEncoders = <String, ParameterEncoder>{
   'bool': (
-    ParameterElement element, {
+    FormalParameterElement element, {
     required String name,
   }) =>
       name,
@@ -82,7 +82,7 @@ final kEncoders = <String, ParameterEncoder>{
 
 String encode(
   ClassElement classElement,
-  ParameterElement element, {
+  FormalParameterElement element, {
   required Map<String, String> aliases,
   required Map<String, String> defaults,
 }) {
@@ -97,7 +97,7 @@ String encode(
   if (encoder != null) {
     result = encoder(
       element,
-      name: displayName,
+      name: displayName!,
     );
   }
 

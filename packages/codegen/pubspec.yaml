@@ -13,17 +13,20 @@ analyzer:
     - 'lib/**/*.g.dart'
 
 dependencies:
-  analyzer: '>=6.2.0 <7.4.0'
-  build: '^2.4.2'
-  code_builder: '^4.10.1'
+  code_builder: ^4.11.0
   dynamic_widget_annotation: '^3.0.0'
   json_class: '^3.0.1'
-  json_theme: '^9.0.0+1'
+  json_theme:
+    git:
+      url: git@github.com:AugustToko/json_theme.git
+      path: packages/json_theme
+      ref: main
   recase: '^4.1.0'
-  source_gen: '^2.0.0'
-  template_expressions: '^3.3.1+2'
+  source_gen: ^4.0.2
   yaml_writer: '^2.1.0'
   yaon: '^1.1.4+10'
+  build_runner: ^2.10.1
+  build: ^4.0.2
 
 dev_dependencies:
   flutter_lints: '^6.0.0'

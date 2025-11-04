@@ -58,20 +58,20 @@ class JsonWidgetLibraryBuilder extends GeneratorForAnnotation<JsonWidget> {
 
     final positionedParams = <String>[];
     MethodElement? method;
-    const aliasChecker = TypeChecker.fromRuntime(JsonArgAlias);
-    const builderParamChecker = TypeChecker.fromRuntime(JsonBuildArg);
-    const builderChecker = TypeChecker.fromRuntime(JsonBuilder);
-    const defaultChecker = TypeChecker.fromRuntime(JsonDefaultParam);
-    const positionedChecker = TypeChecker.fromRuntime(JsonPositionedParam);
-    const schemaNameChecker = TypeChecker.fromRuntime(JsonSchemaName);
+    const aliasChecker = TypeChecker.typeNamed(JsonArgAlias);
+    const builderParamChecker = TypeChecker.typeNamed(JsonBuildArg);
+    const builderChecker = TypeChecker.typeNamed(JsonBuilder);
+    const defaultChecker = TypeChecker.typeNamed(JsonDefaultParam);
+    const positionedChecker = TypeChecker.typeNamed(JsonPositionedParam);
+    const schemaNameChecker = TypeChecker.typeNamed(JsonSchemaName);
 
     var conHasRegistry = false;
 
     ConstructorElement? eCon;
     for (var c in element.constructors) {
-      if (c.name == '') {
+      if (c.name == 'new') {
         eCon = c;
-        for (var p in c.parameters) {
+        for (var p in c.formalParameters) {
           if (p.name == 'registry') {
             conHasRegistry = true;
           }
@@ -151,9 +151,9 @@ class JsonWidgetLibraryBuilder extends GeneratorForAnnotation<JsonWidget> {
     final paramDecoders = <String, MethodElement>{};
     final paramEncoders = <String, MethodElement>{};
     final schemaDecoders = <String, MethodElement>{};
-    const paramEncoderChecker = TypeChecker.fromRuntime(JsonArgEncoder);
-    const paramDecoderChecker = TypeChecker.fromRuntime(JsonArgDecoder);
-    const paramSchemaChecker = TypeChecker.fromRuntime(JsonArgSchema);
+    const paramEncoderChecker = TypeChecker.typeNamed(JsonArgEncoder);
+    const paramDecoderChecker = TypeChecker.typeNamed(JsonArgDecoder);
+    const paramSchemaChecker = TypeChecker.typeNamed(JsonArgSchema);
     for (var m in methodsList) {
       final paramEncoderAnnotation = paramEncoderChecker.firstAnnotationOf(m);
       final paramDecoderAnnotation = paramDecoderChecker.firstAnnotationOf(m);
@@ -202,7 +202,7 @@ class JsonWidgetLibraryBuilder extends GeneratorForAnnotation<JsonWidget> {
       final docs = f.documentationComment;
 
       if (docs != null) {
-        widgetFieldDocs[f.name] = docs;
+        widgetFieldDocs[f.name!] = docs;
       }
     }
 
@@ -213,7 +213,7 @@ class JsonWidgetLibraryBuilder extends GeneratorForAnnotation<JsonWidget> {
 
     ConstructorElement? wCon;
     for (var c in widget.constructors) {
-      if (c.name == '') {
+      if (c.name == 'new') {
         wCon = c;
       }
     }
@@ -226,13 +226,13 @@ class JsonWidgetLibraryBuilder extends GeneratorForAnnotation<JsonWidget> {
 
     final wConstructor = wCon;
 
-    final params = wConstructor.parameters;
+    final params = wConstructor.formalParameters;
 
     final generated = Class((c) {
       c.name = name.substring(1);
       c.extend = Reference(name);
       params.sort((a, b) {
-        var result = a.name.compareTo(b.name);
+        var result = a.name!.compareTo(b.name!);
 
         if (kChildNames.contains(a.name)) {
           if (!kChildNames.contains(b.name)) {
@@ -768,7 +768,7 @@ return result;
               }
               if (encoder != null) {
                 customEncoders.write('''
-final ${name}Encoded = ${encoder.enclosingElement3.name}.${encoder.name}(${param.name});
+final ${name}Encoded = ${encoder.enclosingElement!.name}.${encoder.name}(${param.name});
 ''');
 
                 buf.write('''
@@ -837,7 +837,7 @@ ${buf.toString()}
           } else {
             if (!sMethod.isStatic) throw 'Schema only supports static methods';
             properties.write(
-              "'$name': ${sMethod.enclosingElement3.name}.${sMethod.displayName}(),",
+              "'$name': ${sMethod.enclosingElement!.name}.${sMethod.displayName}(),",
             );
           }
         }
@@ -915,7 +915,7 @@ void _buildClassFields({
   required TypeChecker builderParamChecker,
   required ClassBuilder c,
   required Map<String, MethodElement> paramDecoders,
-  required List<ParameterElement> params,
+  required List<FormalParameterElement> params,
   required InterfaceType widget,
   required Map<String, String> widgetFieldDocs,
 }) {
@@ -965,7 +965,7 @@ void _buildConstructorParams({
   required ConstructorBuilder con,
   required Map<String, MethodElement> paramDecoders,
   required Map<String, String> paramDefaults,
-  required List<ParameterElement> params,
+  required List<FormalParameterElement> params,
   List<String>? positionedParams,
 }) {
   positionedParams?.forEach((paramName) {
@@ -1012,14 +1012,14 @@ void _buildConstructorParams({
 
           bool hasAnyRequiredParameter(MethodElement? me) {
             if (me == null) return false;
-            return me.parameters.any((pe) {
+            return me.formalParameters.any((pe) {
               return pe.isPositional ||
                   pe.isRequiredPositional ||
                   pe.isRequiredNamed;
             });
           }
 
-          param.name = p.name;
+          param.name = p.name!;
           param.named = true;
           param.defaultTo =
               defaultValueCode == null ||
@@ -1042,7 +1042,7 @@ void _buildCustomParamBuilder({
   required StringBuffer buf,
   required TypeChecker builderParamChecker,
   required List<String> lines,
-  required ParameterElement param,
+  required FormalParameterElement param,
   required Map<String, MethodElement> paramDecoders,
   required bool positioned,
   required List<String> positionedParams,
@@ -1133,7 +1133,7 @@ ${prefix}model.${param.name} == null ? null : <PreferredSizeWidget>[
     lines.add('$pPrefix${name}Decoded');
 
     final decoderParams = <String>[];
-    for (var field in method.parameters) {
+    for (var field in method.formalParameters) {
       if (field.name == 'childBuilder') {
         decoderParams.add('childBuilder: childBuilder,');
       } else if (field.name == 'context') {

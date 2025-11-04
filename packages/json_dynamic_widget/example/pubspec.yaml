@@ -18,7 +18,11 @@ dependencies:
   json_class: '^3.0.1'
   json_dynamic_widget:
     path: '../'
-  json_theme: '^9.0.0+1'
+  json_theme:
+    git:
+      url: git@github.com:AugustToko/json_theme.git
+      path: packages/json_theme
+      ref: main
   logging: '^1.3.0'
   yaon: '^1.1.4+10'
 
